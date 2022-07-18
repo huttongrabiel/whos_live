@@ -1,4 +1,4 @@
-use clap::Parser;
+use std::env;
 use tokio;
 
 struct TwitchRequest {
@@ -13,24 +13,26 @@ impl TwitchRequest {
     }
 }
 
-#[derive(Parser, Debug)]
-struct Args {
-    #[clap(short, long, value_parser)]
-    username: String,
-}
-
 #[tokio::main]
-async fn main() {
-    let args = Args::parse();
+async fn main() -> Result<(), &'static str> {
+    let mut args = env::args().into_iter();
+    args.next();
 
-    let request = TwitchRequest::new(&args.username);
+    let username = match args.next() {
+        Some(username) => username,
+        None => return Err("Please provide a twitch stream name!"),
+    };
+
+    let request = TwitchRequest::new(&username);
     let response = make_request(&request).await;
 
     if is_live(response) {
-        diplay_live_user(args.username, request.url)
+        diplay_live_user(username, request.url)
     } else {
-        println!("{} is not live. :(", args.username)
+        println!("{} is not live. :(", username)
     }
+
+    Ok(())
 }
 
 /// Query the url of a twitch stream at "twitch.tv/{username}".
