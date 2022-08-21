@@ -42,7 +42,9 @@ async fn main() -> Result<(), &'static str> {
 ///
 /// # Panics
 ///
-/// Potential for await to return an error.
+/// Potential for await to return an error. Because of Twitch's design, this
+/// should never panic, but there is always a possibility of Twitch changing
+/// things on their end.
 async fn make_request(request_content: &TwitchRequest) -> String {
     let response = reqwest::get(&request_content.url)
         .await
