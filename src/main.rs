@@ -1,5 +1,4 @@
 use std::env;
-use tokio;
 
 struct TwitchRequest {
     url: String,
@@ -15,7 +14,7 @@ impl TwitchRequest {
 
 #[tokio::main]
 async fn main() -> Result<(), &'static str> {
-    let mut args = env::args().into_iter();
+    let mut args = env::args();
     args.next();
 
     let username = match args.next() {
@@ -47,14 +46,12 @@ async fn main() -> Result<(), &'static str> {
 /// should never panic, but there is always a possibility of Twitch changing
 /// things on their end.
 async fn make_request(request_content: &TwitchRequest) -> String {
-    let response = reqwest::get(&request_content.url)
+    reqwest::get(&request_content.url)
         .await
         .unwrap()
         .text()
         .await
-        .unwrap();
-
-    response
+        .unwrap()
 }
 
 /// Looks through the response returned by make_request for "isLiveBroadcast".
