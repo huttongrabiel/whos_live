@@ -19,7 +19,8 @@ async fn main() -> Result<(), &'static str> {
     args.next();
 
     let username = match args.next() {
-        Some(username) => username,
+        // Twitch API uses all lowercase names for streamers.
+        Some(username) => username.to_lowercase(),
         None => return Err("Please provide a twitch stream name!"),
     };
 
