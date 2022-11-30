@@ -28,7 +28,7 @@ async fn main() -> Result<(), &'static str> {
     let response = make_request(&request).await;
 
     if is_live(response) {
-        diplay_live_user(username, request.url)
+        display_live_user(username, request.url)
     } else {
         println!("{} is not live. :(", username)
     }
@@ -74,7 +74,7 @@ fn is_live(response: String) -> bool {
 /// # Panics
 ///
 /// Slicing the string could panic if the character is not ascii.
-fn diplay_live_user(username: String, url: String) {
+fn display_live_user(username: String, url: String) {
     // + 4 accounts for the border of the square and the space on each side.
     let x = url.len() + 4;
     let y = 6;
